@@ -6,15 +6,15 @@
   en dehors des moments d'action
 	
 	Compilation ESP8266,80MHz 4MHz (3M spiffs)
-  356416 34%, 37156 45%
+  356412 34%, 37144 45% 08/08/2019
 	
 */
 
 #include <credentials_home.h>     // informations de connexion Wifi
 #include <ESP8266WiFi.h>          // Biblio Wifi
-#include <ArduinoOTA.h>						// Upload Wifi
-#include <RemoteDebug.h>					// Telnet debug
-#include <ESP8266WebServer.h>			// Serveur Httpp
+#include <ArduinoOTA.h>           // Upload Wifi
+#include <RemoteDebug.h>          // Telnet debug
+#include <ESP8266WebServer.h>     // Serveur Httpp
 #include <TimeAlarms.h>
 
 ESP8266WebServer server(3200);    // On instancie un serveur qui ecoute sur le port 3200
@@ -88,9 +88,9 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   ArduinoOTA.setHostname("ESP_Volets"); // on donne une petit nom a notre module
-  ArduinoOTA.begin(); 							// initialisation de l'OTA
+  ArduinoOTA.begin();                   // initialisation de l'OTA
   debug.begin("ESP_Volets");
-  debug.setResetCmdEnabled(true);		// autorise reset par telnet
+  debug.setResetCmdEnabled(true);       // autorise reset par telnet
 
   // on definit les points d'entree (les URL a saisir dans le navigateur web) et on affiche un simple texte
   server.on ("/", handleClient);
@@ -166,7 +166,7 @@ void DrivePin(int PinOutput) {
   noInterrupts();
   detachInterrupt(digitalPinToInterrupt(PinOutput));
 
-  pinMode			(PinOutput, OUTPUT);
+  pinMode     (PinOutput, OUTPUT);
 
   digitalWrite(LedRouge, LOW);
   digitalWrite(PinOutput, LOW);
@@ -309,7 +309,7 @@ String getPage() { //content='60'
   page += "<div class='container-fluid'>";
   page += "<div class='row'>";
   page += "<div class='col-md-12'>";
-  page += "<h1 class ='text-center'>Volets Roulants 2</h1>";
+  page += "<h1 class ='text-center'>Volets Roulants</h1>";
   page += "<div class='row'>";
   page += "<div class='col-xs-2 '><h4 class ='text-left'>Etage</h4>";
   page += "</div>";
