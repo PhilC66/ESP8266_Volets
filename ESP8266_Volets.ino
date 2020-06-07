@@ -4,8 +4,11 @@
   On recoit les commandes de la page Web et actionne en parallele sur les BP
   on envoie les actions sur base BDD a intervalle regulier,
   en dehors des moments d'action
-	
-	Compilation ESP8266,80MHz 4MHz (3M spiffs)
+  
+	06/06/2020 ESP8266 2.5.0
+  Arduino IDE 1.8.10
+	Compilation ESP8266 (> 2.5.0 ne fonctionne pas pb ISR ou OTA),80MHz 4MHz (3M spiffs)
+  356428 34%, 35784 43% 09/06/2020
   356412 34%, 37144 45% 08/08/2019
 	
 */
@@ -16,6 +19,8 @@
 #include <RemoteDebug.h>          // Telnet debug
 #include <ESP8266WebServer.h>     // Serveur Httpp
 #include <TimeAlarms.h>
+
+#include "index.h"
 
 ESP8266WebServer server(3200);    // On instancie un serveur qui ecoute sur le port 3200
 WiFiClient client;
@@ -137,7 +142,7 @@ void loop() {
   ArduinoOTA.handle();	// Telechargement en Wifi
   debug.handle();				// debug par Telnet
   server.handleClient();// pour que les requetes soient traitees en Http
-  Alarm.delay(10);
+  Alarm.delay(1);
 
 }
 //---------------------------------------------------------------------------
@@ -149,6 +154,8 @@ void setInterruptions() {
   pinMode			(OpDescRdc, INPUT_PULLUP);
 
   noInterrupts();
+
+// #define ISR(serviceRoutine) void serviceroutine() __attribute__((ICACHE_RAM_ATTR)); void serviceroutine() 
 
   attachInterrupt(digitalPinToInterrupt(OpMontEtg), handleIRQ1, FALLING);
   attachInterrupt(digitalPinToInterrupt(OpDescEtg), handleIRQ2, FALLING);
@@ -249,13 +256,13 @@ boolean W_data() {
       client.print(Sdata);
       delay(10);
       // debug.print(F("length : ")), debug.println(Sdata.length());
-      debug.print(F("Envoye au serveur : ")), debug.println(Sdata);
+      // debug.print(F("Envoye au serveur : ")), debug.println(Sdata);
 
       String req = client.readStringUntil('X');//'\r' ne renvoie pas tous les caracteres?
       // debug.print("reponse serveur volets : "),debug.println(req);
       pos = req.indexOf("WOK");
       if (pos > 1) {
-        // debug.print("Ecriture bdd OK : "), debug.println(Sdata);
+        debug.print("Ecriture bdd OK : "), debug.println(Sdata);
         flagreturn = true;
       }
       else {
@@ -303,24 +310,25 @@ void SignalVie() {
 }
 //---------------------------------------------------------------------------
 String getPage() { //content='60'
-  String page = "<html lang='fr'><head><meta http-equiv='refresh'  name='viewport' content='width=device-width, initial-scale=1 user-scalable=no'/>";
-  page += "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'><script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>";
-  page += "<title>Volets</title></head><body>";
-  page += "<div class='container-fluid'>";
-  page += "<div class='row'>";
-  page += "<div class='col-md-12'>";
-  page += "<h1 class ='text-center'>Volets Roulants</h1>";
-  page += "<div class='row'>";
-  page += "<div class='col-xs-2 '><h4 class ='text-left'>Etage</h4>";
-  page += "</div>";
-  page += "<div class='col-xs-5 '><form action='/' method='POST'><button type='button submit' name='D0' value='M' class='btn btn-success btn-lg'>Ouvrir</button></form></div>";
-  page += "<div class='col-xs-5 '><form action='/' method='POST'><button type='button submit' name='D1' value='D' class='btn btn-primary btn-lg'>Fermer</button></form></div>";
-  page += "<div class='col-xs-2 '><h4 class ='text-left'>Rdc</h4>";
-  page += "</div>";
-  page += "<div class='col-xs-5 '><form action='/' method='POST'><button type='button submit' name='D2' value='M' class='btn btn-success btn-lg'>Ouvrir</button></form></div>";
-  page += "<div class='col-xs-5 '><form action='/' method='POST'><button type='button submit' name='D3' value='D' class='btn btn-primary btn-lg'>Fermer</button></form></div>";
-  page += "<br><p></p>";
-  page += "</div></div></div></div>";
-  page += "</body></html>";
+  // String page = "<html lang='fr'><head><meta http-equiv='refresh'  name='viewport' content='width=device-width, initial-scale=1 user-scalable=no'/>";
+  // page += "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'><script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>";
+  // page += "<title>Volets</title></head><body>";
+  // page += "<div class='container-fluid'>";
+  // page += "<div class='row'>";
+  // page += "<div class='col-md-12'>";
+  // page += "<h1 class ='text-center'>Volets Roulants</h1>";
+  // page += "<div class='row'>";
+  // page += "<div class='col-xs-2 '><h4 class ='text-left'>Etage</h4>";
+  // page += "</div>";
+  // page += "<div class='col-xs-5 '><form action='/' method='POST'><button type='button submit' name='D0' value='M' class='btn btn-success btn-lg'>Ouvrir</button></form></div>";
+  // page += "<div class='col-xs-5 '><form action='/' method='POST'><button type='button submit' name='D1' value='D' class='btn btn-primary btn-lg'>Fermer</button></form></div>";
+  // page += "<div class='col-xs-2 '><h4 class ='text-left'>Rdc</h4>";
+  // page += "</div>";
+  // page += "<div class='col-xs-5 '><form action='/' method='POST'><button type='button submit' name='D2' value='M' class='btn btn-success btn-lg'>Ouvrir</button></form></div>";
+  // page += "<div class='col-xs-5 '><form action='/' method='POST'><button type='button submit' name='D3' value='D' class='btn btn-primary btn-lg'>Fermer</button></form></div>";
+  // page += "<br><p></p>";
+  // page += "</div></div></div></div>";
+  // page += "</body></html>";
+  String page = MAIN_page;
   return page;
 }
