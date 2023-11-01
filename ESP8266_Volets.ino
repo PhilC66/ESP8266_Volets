@@ -5,6 +5,16 @@
   on envoie les actions sur base BDD a intervalle regulier,
   en dehors des moments d'action
   
+  to do
+  passer en mqtt à la place http ?
+
+  31/10/2023
+  Ajouté Wifimanager
+  ICACHE_RAM_ATTR necessaire avec version ESP8266 2.5.2
+  ARDUINO IDE 1.8.19, ESP8266 2.5.2
+  Le croquis utilise 376104 octets (36%)
+  Les variables globales utilisent 39592 octets (48%)
+
 	06/06/2020 ESP8266 2.5.0
   Arduino IDE 1.8.10
 	Compilation ESP8266 (> 2.5.0 ne fonctionne pas pb ISR ou OTA),80MHz 4MHz (3M spiffs)
@@ -12,14 +22,14 @@
   356412 34%, 37144 45% 08/08/2019
 	
 */
-
+#include <Arduino.h>
 #include <credentials_home.h>     // informations de connexion Wifi
 #include <ESP8266WiFi.h>          // Biblio Wifi
 #include <ArduinoOTA.h>           // Upload Wifi
 #include <RemoteDebug.h>          // Telnet debug
 #include <ESP8266WebServer.h>     // Serveur Httpp
+#include <WiFiManager.h>          // Helps with connecting to Wifi
 #include <TimeAlarms.h>
-
 #include "index.h"
 
 ESP8266WebServer server(3200);    // On instancie un serveur qui ecoute sur le port 3200
@@ -51,42 +61,58 @@ volatile unsigned long irq4 = 0;
 
 int rebond = 20;
 AlarmId Svie;
-
-void handleIRQ1() { // interrupt monte etage
+// ICACHE_RAM_ATTR necessaire avec version ESP8266 2.5.2
+ICACHE_RAM_ATTR void handleIRQ1() { // interrupt monte etage.
   if (millis() - irq1 > rebond) {
     Metg ++;
     irq1 = millis();
   }
 }
-void handleIRQ2() { // interrupt desc etage
+ICACHE_RAM_ATTR void handleIRQ2() { // interrupt desc etage
   if (millis() - irq2 > rebond) {
     Detg ++;
     irq2 = millis();
   }
 }
-void handleIRQ3() { // interrupt monte rdc
+ICACHE_RAM_ATTR void handleIRQ3() { // interrupt monte rdc
   if (millis() - irq3 > rebond) {
     Mrdc ++;
     irq3 = millis();
   }
 }
-void handleIRQ4() { // interrupt desc rdc
+ICACHE_RAM_ATTR void handleIRQ4() { // interrupt desc rdc
   if (millis() - irq4 > rebond) {
     Drdc ++;
     irq4 = millis();
   }
 }
-
+void configModeCallback (WiFiManager *myWiFiManager);
 //---------------------------------------------------------------------------
 void setup() {
   Serial.begin(115200);
-  WiFi.begin(mySSID, myPASSWORD);
-  Serial.println("");
-  // on attend d'etre connecte au WiFi avant de continuer
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  // /* WiFiManager */
+  WiFiManager wifiManager;
+  /* Uncomment for testing wifi manager */
+  // wifiManager.resetSettings();
+  wifiManager.setAPCallback(configModeCallback);
+
+  /* or use this for auto generated name ESP + ChipID */
+  if (!wifiManager.autoConnect()) {
+    Serial.println(F("failed to connect and hit timeout"));
+    delay(1000);
+    //reset and try again, or maybe put it to deep sleep
+    ESP.reset();
+    delay(1000);
   }
+
+  /* Manual Wifi */
+  // WiFi.begin(mySSID, myPASSWORD);
+  // Serial.println("");
+  // // on attend d'etre connecte au WiFi avant de continuer
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   delay(500);
+  //   Serial.print(".");
+  // }
   // on affiche l'adresse IP qui nous a ete attribuee
   Serial.println("");
   Serial.print("IP address: ");
@@ -117,7 +143,7 @@ void setup() {
 }
 //---------------------------------------------------------------------------
 void loop() {
-
+  
   if (Metg > 0) { // detection d'un appui sur bouton
     Serial.print("interrupt Metg :"), Serial.println(Metg);
     Metg = 0;
@@ -192,7 +218,7 @@ void AccumulData(byte f, byte s) {
 	debug.print("commande :"),debug.print(f),debug.print(","),debug.println(s);
 
   nbrligne ++;
-  Alarm.enable(Svie);
+Alarm.enable(Svie);
 }
 //---------------------------------------------------------------------------
 void handleClient() {
@@ -293,7 +319,6 @@ void SignalVie() {
   debug.print("Uptime :"), debug.println(time_str);
   Serial.print("Uptime :"), Serial.println(time_str);
 
-  // timer = millis();
   digitalWrite(LedBleue, 0);
   Alarm.delay(15);
   digitalWrite(LedBleue, 1);
@@ -331,4 +356,13 @@ String getPage() { //content='60'
   // page += "</body></html>";
   String page = MAIN_page;
   return page;
+}
+//--------------------------------------------------------------------------------//
+void configModeCallback (WiFiManager *myWiFiManager) {
+  /* Called if WiFi has not been configured yet */
+  Serial.println("Gestion Wifi"); // "Wifi Manager"
+  Serial.println("Se connecter a "); // "Please connect to AP"
+  Serial.println(myWiFiManager->getConfigPortalSSID());
+  Serial.println("Acceder a la page de configuration"); // "To setup Wifi Configuration"
+  Serial.println("192.168.4.1");
 }
