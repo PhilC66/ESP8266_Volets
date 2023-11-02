@@ -1,19 +1,18 @@
-Le croquis utilise 376104 octets (36%) de l'espace de stockage de programmes. Le maximum est de 1044464 octets.
-Les variables globales utilisent 39592 octets (48%) de mémoire dynamique, ce qui laisse 42328 octets pour les variables locales. Le maximum est de 81920 octets.
+Le croquis utilise 409360 octets (39%) de l'espace de stockage de programmes. Le maximum est de 1044464 octets.
+Les variables globales utilisent 36708 octets (44%) de mémoire dynamique, ce qui laisse 45212 octets pour les variables locales. Le maximum est de 81920 octets.
 
-Used library     Version Path                                                                                                     
-credentials              F:\Documents\Arduino\libraries\credentials                                                               
-ESP8266WiFi      1.0     C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ESP8266WiFi     
-ArduinoOTA       1.0     C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ArduinoOTA      
-RemoteDebug      3.0.5   F:\Documents\Arduino\libraries\RemoteDebug                                                               
-ESP8266WebServer 1.0     C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ESP8266WebServer
-WiFiManager      0.14    F:\Documents\Arduino\libraries\WiFiManager                                                               
-DNSServer        1.1.1   C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\DNSServer       
-TimeAlarms       1.5     F:\Documents\Arduino\libraries\TimeAlarms-master                                                         
-Time             1.6.1   F:\Documents\Arduino\libraries\Time                                                                      
-ESP8266mDNS      1.2     C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ESP8266mDNS     
-Hash             1.0     C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\Hash            
+Used library     Version     Path                                                                                                     
+credentials                  F:\Documents\Arduino\libraries\credentials                                                               
+ESP8266WiFi      1.0         C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ESP8266WiFi     
+ArduinoOTA       1.0         C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ArduinoOTA      
+RemoteDebug      3.0.5       F:\Documents\Arduino\libraries\RemoteDebug                                                               
+ESP8266WebServer 1.0         C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ESP8266WebServer
+WiFiManager      2.0.16-rc.2 F:\Documents\Arduino\libraries\WiFiManager                                                               
+DNSServer        1.1.1       C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\DNSServer       
+TimeAlarms       1.5         F:\Documents\Arduino\libraries\TimeAlarms-master                                                         
+Time             1.6.1       F:\Documents\Arduino\libraries\Time                                                                      
+ESP8266mDNS      1.2         C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\ESP8266mDNS     
+Hash             1.0         C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2\libraries\Hash            
 
 Used platform   Version Path                                                                          
 esp8266:esp8266 2.5.2   C:\Users\phili\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.5.2
-IntelliSense configuration already up to date. To manually rebuild your IntelliSense configuration run "Ctrl+Alt+I"

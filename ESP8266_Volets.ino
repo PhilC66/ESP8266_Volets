@@ -8,6 +8,13 @@
   to do
   passer en mqtt à la place http ?
 
+  02/11/2023
+  Wifimanager timeout et retry
+  ICACHE_RAM_ATTR necessaire avec version ESP8266 2.5.2
+  ARDUINO IDE 1.8.19, ESP8266 2.5.2
+  Le croquis utilise 409360 octets (39%)
+  Les variables globales utilisent 36708 octets (44%)
+
   31/10/2023
   Ajouté Wifimanager
   ICACHE_RAM_ATTR necessaire avec version ESP8266 2.5.2
@@ -95,6 +102,8 @@ void setup() {
   /* Uncomment for testing wifi manager */
   // wifiManager.resetSettings();
   wifiManager.setAPCallback(configModeCallback);
+	wifiManager.setConfigPortalTimeout(120); // sets timeout before AP,webserver loop ends and exits
+  wifiManager.setConnectRetries(10);       // sets number of retries for autoconnect
 
   /* or use this for auto generated name ESP + ChipID */
   if (!wifiManager.autoConnect()) {
